@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhagavad Gita - Divine Wisdom</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Sanskrit Text', serif;
+        }
+        
+         :root {
+            --golden: #ffd700;
+            --deep-orange: #ff4800;
+            --light-gold: #fff5e0;
+        }
+        
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .video-container video {
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+        
+        body {
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .main-title {
+            font-size: 5rem;
+            color: var(--golden);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px var(--golden);
+            }
+            to {
+                text-shadow: 0 0 20px var(--golden), 0 0 30px var(--deep-orange);
+            }
+        }
+        
+        .subtitle {
+            font-size: 2rem;
+            color: var(--light-gold);
+            margin-top: 1rem;
+        }
+        
+        .scroll-down {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            color: var(--golden);
+            font-size: 2rem;
+        }
+        
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .chapters-container {
+            padding: 4rem 2rem;
+        }
+        
+        .chapter-card {
+            max-width: 1200px;
+            margin: 4rem auto;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.8s ease-out;
+        }
+        
+        .chapter-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .chapter-header {
+            background: linear-gradient(45deg, var(--golden), var(--deep-orange));
+            padding: 2rem;
+            color: black;
+        }
+        
+        .chapter-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .chapter-title {
+            font-size: 2.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .chapter-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            padding: 2rem;
+        }
+        
+        .chapter-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            height: 400px;
+        }
+        
+        .chapter-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .chapter-image:hover img {
+            transform: scale(1.1);
+        }
+        
+        .chapter-text {
+            padding: 1rem;
+            line-height: 1.8;
+        }
+        
+        .key-lessons {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+        }
+        
+        .key-lessons h4 {
+            color: var(--golden);
+            margin-bottom: 1rem;
+        }
+        
+        .key-lessons ul {
+            list-style: none;
+        }
+        
+        .key-lessons li {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .key-lessons li:before {
+            content: '✧';
+            position: absolute;
+            left: 0;
+            color: var(--golden);
+        }
+        
+        .navigation-dots {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-dot.active {
+            background: var(--golden);
+            transform: scale(1.5);
+        }
+        
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 3rem;
+            }
+            .subtitle {
+                font-size: 1.5rem;
+            }
+            .chapter-content {
+                grid-template-columns: 1fr;
+            }
+            .chapter-image {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="video-container">
+        <video autoplay muted loop>
+            <source src="" type="video/mp4">
+        </video>
+    </div>
+    <div class="video-overlay"></div>
+
+    <header>
+        <h1 class="main-title">Srimadbhagavad Gita</h1>
+        <h2 class="subtitle">The Divine Song of the Lord</h2>
+        <div class="scroll-down">↓</div>
+    </header>
+
+    <div class="chapters-container">
+        <!-- Chapter 1 -->
+        <div class="chapter-card">
+            <div class="chapter-header">
+                <div class="chapter-number">Chapter 1</div>
+                <h2 class="chapter-title">Arjuna Visada Yoga</h2>
+                <div class="sanskrit-title">अर्जुन विषाद योग</div>
+            </div>
+            <div class="chapter-content">
+              <a href="https://bhagavadgita.io/chapter/1">
+                <div class="chapter-image">
+                    <img src="https://i.ytimg.com/vi/LKCDycvnrsQ/maxresdefault.jpg" alt="Arjuna's Dilemma">
+                </div>
+                </a>
+                <div class="chapter-text">
+                    <p>The Bhagavad Gita begins with the scene on the battlefield of Kurukshetra. Arjuna, the great warrior, requests Krishna to position his chariot between the two armies. Seeing his relatives, teachers, and friends in the opposing army,
+                        Arjuna becomes overwhelmed with grief and moral dilemma.</p>
+                    <div class="key-lessons">
+                        <h4>Key Teachings</h4>
+                        <ul>
+                            <li>The nature of emotional attachment and its consequences</li>
+                            <li>The initial stage of spiritual awakening through crisis</li>
+                            <li>The conflict between duty and emotional bonds</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chapter 2 -->
+        <div class="chapter-card">
+            <div class="chapter-header">
+                <div class="chapter-number">Chapter 2</div>
+                <h2 class="chapter-title">Sankhya Yoga</h2>
+                <div class="sanskrit-title">सांख्य योग</div>
+            </div>
+            <div class="chapter-content">
+              <a href="https://bhagavadgita.io/chapter/2">
+                <div class="chapter-image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Bhagavata_Gita_Bishnupur_Arnab_Dutta_2011.JPG" alt="Krishna's Teaching">
+                </div>
+                </a>
+                <div class="chapter-text">
+                    <p>Krishna begins His divine discourse by explaining the eternal nature of the soul and the temporary nature of the body. He introduces fundamental spiritual concepts and explains why Arjuna must perform his duty as a warrior while maintaining
+                        spiritual awareness.</p>
+                    <div class="key-lessons">
+                        <h4>Key Teachings</h4>
+                        <ul>
+                            <li>The immortality of the soul (Atman)</li>
+                            <li>The nature of duty and righteous action</li>
+                            <li>The principles of spiritual knowledge</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chapters-container">
+            <!-- Chapter 3 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 3</div>
+                    <h2 class="chapter-title">Karma Yoga</h2>
+                    <div class="sanskrit-title">कर्म योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/3">
+                    <div class="chapter-image">
+                        <img src="https://d2al04l58v9bun.cloudfront.net/blog/wp-content/uploads/2024/07/20102414/What-is-Karma-Yoga-in-Bhagavad-Gita.jpg" alt="The Path of Selfless Action">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>In this chapter, Krishna explains the concept of Karma Yoga, the yoga of selfless action. He emphasizes the importance of performing one's duty without attachment to the results.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The importance of performing duty without attachment</li>
+                                <li>How to work in harmony with the world and the divine</li>
+                                <li>The relationship between action and the results</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 4 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 4</div>
+                    <h2 class="chapter-title">Jnana Karma Sanyasa Yoga</h2>
+                    <div class="sanskrit-title">ज्ञान कर्म संन्यास योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/4">
+                    <div class="chapter-image">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Krishna_Arjuna_Gita.jpg" alt="The Yoga of Knowledge and Renunciation of Action">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>Krishna explains how true knowledge (Jnana) and selfless action (Karma) lead to liberation. He highlights the importance of understanding the difference between the physical and the eternal self, and how knowledge of the truth removes the bondage of karma.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The power of knowledge in freeing oneself from attachment</li>
+                                <li>The role of spiritual wisdom in understanding the nature of the self</li>
+                                <li>The necessity of renouncing the fruits of action</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 5 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 5</div>
+                    <h2 class="chapter-title">Karma Sanyasa Yoga</h2>
+                    <div class="sanskrit-title">कर्म संन्यास योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/5">
+                    <div class="chapter-image">
+                        <img src="https://www.esamskriti.com/essays/docfile/729.jpg" alt="The Yoga of Renunciation">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>This chapter discusses renunciation (Sanyasa) and how it relates to selfless action. Krishna explains that one who renounces the fruits of action but continues to perform their duties is truly free from the cycle of karma.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The difference between renouncing actions and renouncing desires</li>
+                                <li>The importance of equanimity in performing duties</li>
+                                <li>The connection between renunciation and the attainment of peace</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 6 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 6</div>
+                    <h2 class="chapter-title">Dhyana Yoga</h2>
+                    <div class="sanskrit-title">ध्यान योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/6">
+                    <div class="chapter-image">
+                        <img src="https://i.ytimg.com/vi/4xC2anKYXWc/maxresdefault.jpg" alt="The Yoga of Meditation">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>Krishna elaborates on the practice of meditation (Dhyana) and how it helps in controlling the mind. Through disciplined meditation, one can achieve self-realization and union with the divine.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The importance of meditation for controlling the mind</li>
+                                <li>How to practice mindfulness and focus</li>
+                                <li>The connection between meditation and inner peace</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 7 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 7</div>
+                    <h2 class="chapter-title">Jnana Vijnana Yoga</h2>
+                    <div class="sanskrit-title">ज्ञान विज्ञान योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/7">
+                    <div class="chapter-image">
+                        <img src="https://www.esamskriti.com/essays/docfile/735.jpg" alt="The Yoga of Knowledge and Wisdom">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>In this chapter, Krishna discusses the knowledge (Jnana) of the ultimate truth and the wisdom (Vijnana) that comes with realizing the nature of the divine. He explains how this knowledge helps one transcend the material world.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The difference between intellectual knowledge and spiritual wisdom</li>
+                                <li>The relationship between the divine and the material world</li>
+                                <li>The importance of knowing the Supreme to reach liberation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 8 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 8</div>
+                    <h2 class="chapter-title">Aksara Brahma Yoga</h2>
+                    <div class="sanskrit-title">अक्षर ब्रह्म योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/8">
+                    <div class="chapter-image">
+                        <img src="https://www.esamskriti.com/essays/docfile/744.jpg" alt="The Yoga of the Imperishable Brahman">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>Krishna reveals the nature of the imperishable Brahman and the process of attaining liberation after death. He explains how the soul transcends the physical world and merges with the eternal.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The nature of the imperishable soul</li>
+                                <li>The importance of remembering the divine at the time of death</li>
+                                <li>The path to liberation through devotion and knowledge</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 9 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 9</div>
+                    <h2 class="chapter-title">Raja Vidya Raja Guhya Yoga</h2>
+                    <div class="sanskrit-title">राज विद्या राज गुह्य योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/9">
+                    <div class="chapter-image">
+                        <img src="https://www.4to40.com/wp-content/uploads/2015/01/raja-vidya-guhya-yoga-bhagavad-gita-chapter-9.jpg" alt="The Yoga of Royal Knowledge and Royal Secret">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>This chapter reveals the most secret and sacred knowledge of the divine. Krishna explains that the knowledge of His true nature is the most powerful, and it leads to the realization of divine truth and liberation.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The supremacy of devotion over knowledge and action</li>
+                                <li>The secret of the universe hidden in the supreme knowledge</li>
+                                <li>The path of surrender to the divine for liberation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 10 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 10</div>
+                    <h2 class="chapter-title">Vibhuti Yoga</h2>
+                    <div class="sanskrit-title">विभूति योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/10">
+                    <div class="chapter-image">
+                        <img src="https://i.ytimg.com/vi/3M0FYVTKJ8M/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGHIgSSg3MA8=&rs=AOn4CLATQzguNDc5gJR0AM-jYpkmCjaPHg" alt="The Yoga of Divine Glories">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>In this chapter, Krishna describes His divine manifestations in the world. He reveals that all beings and objects are a reflection of His divine power and that everything in the universe is a manifestation of His supreme energy.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>Understanding the divine manifestations in the world</li>
+                                <li>Seeing the divine presence in all aspects of life</li>
+                                <li>How devotion to Krishna leads to realizing the unity of all creation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 11 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 11</div>
+                    <h2 class="chapter-title">Vishvarupa Darshana Yoga</h2>
+                    <div class="sanskrit-title">विश्वरूप दर्शन योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/11">
+                    <div class="chapter-image">
+                        <img src="https://i.ytimg.com/vi/wazkiVn7LwA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCYKbxFGFiq7Bo0JdZeGQY_ZHW-xQ" alt="The Yoga of the Vision of the Universal Form">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>Krishna reveals His universal form to Arjuna, showing the infinite nature of His existence. Arjuna sees the vastness of the divine, encompassing all creation, and gains a deeper understanding of the cosmic order.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The infinite nature of the divine</li>
+                                <li>The realization of the oneness of all existence</li>
+                                <li>The power of divine vision and spiritual awakening</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 12 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 12</div>
+                    <h2 class="chapter-title">Bhakti Yoga</h2>
+                    <div class="sanskrit-title">भक्ति योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/12">
+                    <div class="chapter-image">
+                        <img src="https://i.pinimg.com/736x/9b/bf/15/9bbf156571519010274cf7ef12e55df4.jpg" alt="The Yoga of Devotion">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>Krishna explains the path of Bhakti, or devotion, as the most direct way to achieve liberation. Devotees who surrender themselves completely to God are assured of His grace and protection.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The power of surrender and devotion to God</li>
+                                <li>The qualities of a true devotee</li>
+                                <li>The benefits of practicing Bhakti Yoga</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 13 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 13</div>
+                    <h2 class="chapter-title">Kshetra Kshetragna Vibhaga Yoga</h2>
+                    <div class="sanskrit-title">क्षेत्र क्षेत्रज्ञ विभाग योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/13">
+                    <div class="chapter-image">
+                        <img src="https://pragmaticgita.com/wp-content/uploads/2024/10/Kshetra-Kshetrajna-2-1080x675.webp" alt="The Yoga of the Field and the Knower of the Field">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>Krishna explains the difference between the physical body (Kshetra) and the soul (Kshetragna). He also teaches that realizing the difference between the two leads to spiritual wisdom and liberation.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The difference between the body and the soul</li>
+                                <li>The role of the body as a vessel for the soul</li>
+                                <li>The nature of spiritual knowledge</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 14 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 14</div>
+                    <h2 class="chapter-title">Gunatraya Vibhaga Yoga</h2>
+                    <div class="sanskrit-title">गुणत्रय विभाग योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/14">
+                    <div class="chapter-image">
+                        <img src="https://i1.sndcdn.com/artworks-000307383231-9i5jwb-t500x500.jpg" alt="The Yoga of the Division of the Three Gunas">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>Krishna explains the three Gunas (qualities) of nature—Sattva, Rajas, and Tamas—and how they influence human behavior. He teaches that by transcending these qualities, one can reach a higher spiritual state.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The influence of the three Gunas on human nature</li>
+                                <li>The path to transcending the Gunas</li>
+                                <li>The importance of self-awareness and detachment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 15 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 15</div>
+                    <h2 class="chapter-title">Purushottama Yoga</h2>
+                    <div class="sanskrit-title">पुरुषोत्तम योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/15">
+                    <div class="chapter-image">
+                        <img src="https://www.esamskriti.com/essays/docfile/777.jpg" alt="The Yoga of the Supreme Divine Personality">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>Krishna explains the nature of the supreme person (Purushottama), the eternal divine essence that is the source of all creation and the ultimate destination of every soul.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The nature of the supreme divine personality</li>
+                                <li>The process of spiritual evolution and liberation</li>
+                                <li>The importance of surrendering to the Supreme</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 16 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 16</div>
+                    <h2 class="chapter-title">Daivasura Sampad Vibhaga Yoga</h2>
+                    <div class="sanskrit-title">दैवासुर सम्पद विभाग योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/16">
+                    <div class="chapter-image">
+                        <img src="https://www.4to40.com/wp-content/uploads/2015/01/daivasura-sampad-vibhaga-yoga-bhagavad-gita-chapter-16.jpg" alt="The Yoga of the Division between the Divine and the Demonic">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>Krishna discusses the qualities of the divine (Daivi) and demonic (Asuri) natures. He explains that those with divine qualities progress toward liberation, while those with demonic qualities remain in the cycle of birth and death.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The difference between divine and demonic natures</li>
+                                <li>The qualities that lead to spiritual evolution or downfall</li>
+                                <li>The importance of cultivating divine qualities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 17 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 17</div>
+                    <h2 class="chapter-title">Shraddhatraya Vibhaga Yoga</h2>
+                    <div class="sanskrit-title">श्रद्धात्रय विभाग योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/17">
+                    <div class="chapter-image">
+                        <img src="https://www.esamskriti.com/essays/docfile/781.jpg" alt="The Yoga of the Three Divisions of Faith">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>In this chapter, Krishna describes three types of faith according to the nature of individuals: the faith of the sattvic, rajasic, and tamasic person. He emphasizes that faith is essential for spiritual development, and it must be directed toward the divine for spiritual progress.</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The different types of faith based on the three Gunas</li>
+                                <li>The role of faith in determining one's spiritual progress</li>
+                                <li>The importance of having pure and divine faith</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Chapter 18 -->
+            <div class="chapter-card">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 18</div>
+                    <h2 class="chapter-title">Moksha Sanyasa Yoga</h2>
+                    <div class="sanskrit-title">मोक्ष संन्यास योग</div>
+                </div>
+                <div class="chapter-content">
+                  <a href="https://bhagavadgita.io/chapter/18">
+                    <div class="chapter-image">
+                        <img src="https://omshivam.files.wordpress.com/2010/05/shri-krishna.jpg" alt="The Yoga of Liberation and Renunciation">
+                    </div>
+                  </a>
+                    <div class="chapter-text">
+                        <p>In the final chapter, Krishna summarizes the teachings of the Gita, emphasizing renunciation, surrender to the divine, and the importance of doing one's duty without attachment. He assures Arjuna that by following the path of selfless action, devotion, and wisdom, one can attain liberation (Moksha).</p>
+                        <div class="key-lessons">
+                            <h4>Key Teachings</h4>
+                            <ul>
+                                <li>The final surrender to the divine will</li>
+                                <li>The importance of renunciation of desires and ego</li>
+                                <li>The path to liberation through devotion, knowledge, and selfless action</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Add more chapters following the same pattern -->
+    </div>
+
+    <div class="navigation-dots">
+        <!-- Will be populated by JavaScript -->
+    </div>
+
+    <script>
+        // Scroll animation for chapters
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.3
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.chapter-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Smooth scroll for navigation
+        document.querySelector('.scroll-down').addEventListener('click', () => {
+            window.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth'
+            });
+        });
+
+        // Create navigation dots
+        const chaptersContainer = document.querySelector('.chapters-container');
+        const navigationDots = document.querySelector('.navigation-dots');
+        const chapters = document.querySelectorAll('.chapter-card');
+
+        chapters.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('nav-dot');
+            dot.addEventListener('click', () => {
+                chapters[index].scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+            navigationDots.appendChild(dot);
+        });
+
+        // Update active dot on scroll
+        window.addEventListener('scroll', () => {
+            const dots = document.querySelectorAll('.nav-dot');
+            chapters.forEach((chapter, index) => {
+                const rect = chapter.getBoundingClientRect();
+                if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    dots[index].classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
